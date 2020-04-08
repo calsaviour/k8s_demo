@@ -47,7 +47,7 @@ function setup_user() {
 }
 
 function setup_s3_bucket() {
-    aws s3api create-bucket --bucket $S3_NAME --create-bucket-configuration LocationConstraint=$AWS_REGION    
+    aws s3api create-bucket --bucket $S3_NAME --create-bucket-configuration LocationConstraint=us-west-2
 }
 
 function setup_ssh_key() {
