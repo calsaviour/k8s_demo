@@ -12,8 +12,14 @@
 # set -euo pipefail
 
 
-declare name=kops_demo
+declare name=kops_demo2
 declare ec2_type=t2.medium
+declare keypair=kp_devpoc_k8s2
+
+## Cluster One
+export AWS_REGION=us-west-2
+export S3_NAME=devpoc.calsaviour.two.k8s.local
+export KOPS_STATE_STORE=s3://$S3_NAME
 
 function usage () { 
     echo -e "usage: $0 | --option [argument] | --help\\n" 
@@ -41,31 +47,28 @@ function setup_user() {
 }
 
 function setup_s3_bucket() {
-    aws s3api create-bucket --bucket devpoc.calsaviour.k8s.local --create-bucket-configuration LocationConstraint=us-west-2
-    export STATE_STORE=s3://devpoc.calsaviour.k8s.local
+    aws s3api create-bucket --bucket $S3_NAME --create-bucket-configuration LocationConstraint=us-west-2
 }
 
 function setup_ssh_key() {
-    aws ec2 create-key-pair --key-name kp_devpoc_k8s | jq -r '.KeyMaterial' > kp_devpoc_k8s.pem
-    mv kp_devpoc_k8s.pem ~/.ssh/ 
-    chmod 400 ~/.ssh/kp_devpoc_k8s.pem
-    ssh-keygen -y -f ~/.ssh/kp_devpoc_k8s.pem > ~/.ssh/kp_devpoc_k8s.pub
+    aws ec2 create-key-pair --key-name ${keypair} | jq -r '.KeyMaterial' > ${keypair}.pem
+    mv ${keypair}.pem ~/.ssh/ 
+    chmod 400 ~/.ssh/${keypair}.pem
+    ssh-keygen -y -f ~/.ssh/${keypair}.pem > ~/.ssh/${keypair}.pub
 }
 
 
-function setup_cluster() {
-    export AWS_REGION=us-west-2
-    export S3_NAME=devpoc.calsaviour.k8s.local
-    export STATE_STORE=s3://$S3_NAME
-
+function setup_cluster() {    
     kops create cluster \
     --cloud aws \
     --networking kubenet \
     --name $S3_NAME \
     --master-size $ec2_type \
+    --master-count 3 \
     --node-size $ec2_type \
-    --zones us-west-2a \
-    --ssh-public-key ~/.ssh/kp_devpoc_k8s.pub \
+    --node-count 1 \
+    --zones us-west-1a \
+    --ssh-public-key ~/.ssh/${keypair}.pub \
     --yes
 }
 
@@ -73,10 +76,10 @@ function setup_cluster() {
 function cleanup() {
 
     ## Delete Cluster
-    kops delete cluster devpoc.calsaviour.k8s.local --yes
+    kops delete cluster $S3_NAME --yes
     
     ## Delete key-pair
-    aws ec2 delete-key-pair --key-name kp_devpoc_k8s
+    aws ec2 delete-key-pair --key-name ${keypair}
 
     ## Delete User
     aws iam remove-user-from-group --user-name $name --group-name $name
@@ -93,7 +96,7 @@ function cleanup() {
     aws iam delete-group --group-name $name
 
     ## Delete S3 bucket
-    aws s3api delete-bucket --bucket devpoc.calsaviour.k8s.local --region us-west-2
+    aws s3api delete-bucket --bucket $S3_NAME --region $AWS_REGION
 
 }
 
