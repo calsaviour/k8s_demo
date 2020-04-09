@@ -9,3 +9,7 @@ https://medium.com/faun/how-to-setup-a-perfect-kubernetes-cluster-using-kops-in-
 Sample app
 https://technology.amis.nl/2017/05/22/node-js-run-from-github-in-generic-docker-container-backed-by-dockerized-redis-cache/
 https://github.com/dashsaurabh/docker-compose-nodejs-redis-app
+
+
+https://chengl.com/orchestrating-docker-with-kubernetes/
+https://www.youtube.com/watch?v=51CRPIviZm0
