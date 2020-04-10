@@ -62,7 +62,7 @@ function setup_cluster() {
     --master-count 1 \
     --node-size $ec2_type \
     --node-count 3 \
-    --zones us-west-2a \
+    --zones us-west-1a \
     --ssh-public-key ~/.ssh/${keypair}.pub \
     --yes
 }
