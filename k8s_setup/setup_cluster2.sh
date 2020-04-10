@@ -12,14 +12,9 @@
 # set -euo pipefail
 
 
-declare name=kops_demo
+declare name=kops_demo2
 declare ec2_type=t2.medium
-declare keypair=kp_devpoc_k8s
-
-## Cluster One
-export AWS_REGION=us-west-1
-export S3_NAME=devpoc.calsaviour.one.k8s.local
-export KOPS_STATE_STORE=s3://$S3_NAME
+declare keypair=kp_devpoc_k8s2
 
 function usage () { 
     echo -e "usage: $0 | --option [argument] | --help\\n" 
@@ -64,10 +59,10 @@ function setup_cluster() {
     --networking kubenet \
     --name $S3_NAME \
     --master-size $ec2_type \
-    --master-count 1 \
+    --master-count 3 \
     --node-size $ec2_type \
-    --node-count 3 \
-    --zones us-west-2a \
+    --node-count 1 \
+    --zones us-west-1a \
     --ssh-public-key ~/.ssh/${keypair}.pub \
     --yes
 }
@@ -99,6 +94,11 @@ function cleanup() {
     aws s3api delete-bucket --bucket $S3_NAME --region $AWS_REGION
 
 }
+
+## Main
+export AWS_REGION=us-west-2
+export S3_NAME=devpoc.calsaviour.two.k8s.local
+export KOPS_STATE_STORE=s3://$S3_NAME
 
 # If no arguments passed, do full backup
 if [[ $# -eq 0 ]] ; 

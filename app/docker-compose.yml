@@ -1,8 +1,0 @@
-version: '3'
-services:
-  backend: 
-    image: 'redis'
-  frontend:
-    build: .
-    ports:
-      - "4001:8081"

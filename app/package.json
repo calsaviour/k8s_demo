@@ -1,9 +1,14 @@
 {
-    "dependencies": {
-        "express": "*",
-        "redis": "2.8.0" 
-    },
+    "name": "sample_nodejs_with_redis",
+    "version": "1.0.0",
+    "description": "Node.js and redis on Docker",
+    "author": "Calvin Low <calsaviour@gmail.com>",
+    "main": "server.js",
     "scripts": {
-        "start": "node index.js"
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.13.3",
+      "redis": "^2.2.5"
     }
-}
+  }
