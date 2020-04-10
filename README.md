@@ -18,11 +18,21 @@ kubectl create -f app/frontend.yml
 
 ## Optional (Kubernetes Dashboard)
 ```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+kubectl apply -f dashboard-adminuser.yaml
+kubectl apply -f cluster-role-binding.yaml
+kubectl apply -f recommended.yaml
 
+tmux new -s calvin
 kubectl proxy
 
+Detach from tmux
+
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')\n
+
+
 http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+
 
 ```
 

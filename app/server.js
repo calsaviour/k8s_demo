@@ -10,13 +10,9 @@ const app = express();
 
 app.get('/', function(req, res, next) {
   client.incr('visits', function(err, visits) {
-    if(err) return next(err);
-    const response = {
-      servedBy: 'This request is served by ' + os.hostname(),
-      pageVisits: 'Hello CloudCover, you have ' + visits + ' visitors on this page'      
-    };
-
-    res.status(200).json(response);
+    if(err) return next(err);    
+    res.set('Content-Type', 'text/html');
+    res.send('Hello CloudCover, you have ' + visits + ' visitors on this page');
   });
 });
 
