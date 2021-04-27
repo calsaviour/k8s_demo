@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "express": "^4.13.3",
-    "redis": "^2.2.5"
+    "redis": "^3.1.1"
   }
 }
